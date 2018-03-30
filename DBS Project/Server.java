@@ -35,6 +35,11 @@ public class Server implements Backup {
         int FILE_SIZE = (int) file.length();
         int CHUNK_SIZE = 64000;
 
+        String destFiles = ".//fileChunks//" + filepath.getFileName().toString();
+        System.out.println(destFiles);
+        File destFile = new File(destFiles);
+        destFile.mkdirs();
+
         System.out.println("Filename:" + filepath.getFileName().toString());
         System.out.println("Path:" + filepath.toString());
 
@@ -49,7 +54,7 @@ public class Server implements Backup {
                 inStream = new BufferedInputStream(new FileInputStream(file));
 
                 while (totalBytesRead < FILE_SIZE) {
-                    String PART_NAME = "data" + NUMBER_OF_CHUNKS + ".bin";
+                    String PART_NAME = "chunk_" + NUMBER_OF_CHUNKS + ".bin";
                     int bytesRemaining = FILE_SIZE - totalBytesRead;
                     if (bytesRemaining < CHUNK_SIZE) // Remaining Data Part is Smaller Than CHUNK_SIZE
                     // CHUNK_SIZE is assigned to remain volume
@@ -66,7 +71,7 @@ public class Server implements Backup {
                         NUMBER_OF_CHUNKS++;
                     }
 
-                    write(temporary, ".//fileChunks//" + PART_NAME);
+                    write(temporary, ".//fileChunks//" + filepath.getFileName().toString() +"//" + PART_NAME);
                     System.out.println("Total Bytes Read: " + totalBytesRead);
                 }
 
@@ -101,39 +106,16 @@ public class Server implements Backup {
     }
 
     public String restoreFile(String Path) {
+
+        Path filepath = Paths.get(Path);
+        System.out.println(filepath.getFileName().toString());
+
+        File file = new File(filepath.toString());
+
         return Path;
     }
 
-    public String deleteFile(String Path) {
-        return Path;
-    }
-
-    public String manageStorage(int Maxdiskspace) {
-        return Integer.toString(Maxdiskspace);
-    }
-
-    public String retrieveInfo() {
-        return "Hello, world!";
-    }
-
-    public static void main(String args[]) {
-
-        try {
-            Server obj = new Server();
-            Backup stub = (Backup) UnicastRemoteObject.exportObject(obj, 0);
-
-            // Bind the remote object's stub in the registry
-            Registry registry = LocateRegistry.getRegistry();
-            registry.bind("Backup", stub);
-
-            System.err.println("Server ready");
-        } catch (Exception e) {
-            System.err.println("Server exception: " + e.toString());
-            e.printStackTrace();
-        }
-    }
-
-    public void mergeParts(ArrayList<String> nameList, String DESTINATION_PATH) {
+    /*public void mergeParts(String name, String DESTINATION_PATH) {
         File[] file = new File[nameList.size()];
         byte AllFilesContent[] = null;
 
@@ -169,5 +151,34 @@ public class Server implements Backup {
 
         System.out.println("Merge was executed successfully.!");
 
+    }*/
+
+    public String deleteFile(String Path) {
+        return Path;
+    }
+
+    public String manageStorage(int Maxdiskspace) {
+        return Integer.toString(Maxdiskspace);
+    }
+
+    public String retrieveInfo() {
+        return "Hello, world!";
+    }
+
+    public static void main(String args[]) {
+
+        try {
+            Server obj = new Server();
+            Backup stub = (Backup) UnicastRemoteObject.exportObject(obj, 0);
+
+            // Bind the remote object's stub in the registry
+            Registry registry = LocateRegistry.getRegistry();
+            registry.bind("Backup", stub);
+
+            System.err.println("Server ready");
+        } catch (Exception e) {
+            System.err.println("Server exception: " + e.toString());
+            e.printStackTrace();
+        }
     }
 }
