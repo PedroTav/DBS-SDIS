@@ -1,16 +1,24 @@
 package main.backup;
 
+import java.util.ArrayList;
+
 public class MessageHeader {
 	
-	private String MessageType;
-	private String Version;
-	private String SenderId;
-	private String FileId;
-	private String ChunkNo;
-	private String ReplicationDeg;
+	public enum MsgType {
+		PUTCHUNK, STORED,
+		GETCHUNK, CHUNK,
+		DELETE, REMOVED
+	}
 	
+	private MsgType MessageType;
+	private byte[] Version = {1,0};
+	private long SenderId;
+	private int FileId;
+	private long ChunkNo;
+	private byte ReplicationDeg;
+	private int CRLF = 0xDA;
 	
-	public MessageHeader(String MessageType, String Version, String SenderId, String FileId, String ChunkNo, String ReplicationDeg) {
+	public MessageHeader(MsgType MessageType, byte[] Version, long SenderId, int FileId, long ChunkNo, byte ReplicationDeg) {
 	
 		this.setMessageType(MessageType);
 		this.setVersion(Version);
@@ -20,64 +28,69 @@ public class MessageHeader {
 		this.setReplicationDeg(ReplicationDeg);
 
 	}
+	
+	public String makeSequence(String head) {
+		return head + CRLF;
+	}
 
-
-	public String getMessageType() {
+	public MsgType getMessageType() {
 		return MessageType;
 	}
 
 
-	public void setMessageType(String messageType) {
+	public void setMessageType(MsgType messageType) {
 		MessageType = messageType;
 	}
 
 
-	public String getVersion() {
+	public byte[] getVersion() {
 		return Version;
 	}
 
 
-	public void setVersion(String version) {
+	public void setVersion(byte[] version) {
 		Version = version;
 	}
 
 
-	public String getSenderId() {
+	public long getSenderId() {
 		return SenderId;
 	}
 
 
-	public void setSenderId(String senderId) {
+	public void setSenderId(long senderId) {
 		SenderId = senderId;
 	}
 
 
-	public String getFileId() {
+	public int getFileId() {
 		return FileId;
 	}
 
 
-	public void setFileId(String fileId) {
+	public void setFileId(int fileId) {
 		FileId = fileId;
 	}
 
 
-	public String getChunkNo() {
+	public long getChunkNo() {
 		return ChunkNo;
 	}
 
 
-	public void setChunkNo(String chunkNo) {
+	public void setChunkNo(long chunkNo) {
 		ChunkNo = chunkNo;
 	}
 
-
-	public String getReplicationDeg() {
+	public byte getReplicationDeg() {
 		return ReplicationDeg;
 	}
 
-
-	public void setReplicationDeg(String replicationDeg) {
+	public void setReplicationDeg(byte replicationDeg) {
 		ReplicationDeg = replicationDeg;
+	}
+	
+	public int toString(ArrayList sequence) {
+		return sequence.size();
 	}
 }
