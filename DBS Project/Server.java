@@ -87,23 +87,6 @@ public class Server implements Backup {
 
     }
 
-    void write(byte[] DataByteArray, String DestinationFileName) {
-        try {
-            OutputStream output = null;
-            try {
-                output = new BufferedOutputStream(new FileOutputStream(DestinationFileName));
-                output.write(DataByteArray);
-                System.out.println("Writing Process Was Performed");
-            } finally {
-                output.close();
-            }
-        } catch (FileNotFoundException ex) {
-            ex.printStackTrace();
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-    }
-
     public String restoreFile(String Path) {
 
         Path filepath = Paths.get(Path);
@@ -119,9 +102,8 @@ public class Server implements Backup {
         int FILE_NUMBER = sourceDir.list().length;
         int FILE_LENGTH = 0;
         int CURRENT_LENGTH=0;
-        String DESTINATION_DIR = ".//restoredFiles";
+        String DESTINATION_DIR = ".//restoredFiles//" + filepath.getFileName().toString();
         
-        System.out.println(DESTINATION_DIR);
         
         File[] files = new File[FILE_NUMBER];
 
@@ -168,9 +150,20 @@ public class Server implements Backup {
     }
 
     public String deleteFile(String Path) {
-        return Path;
+    	
+    	Path filepath = Paths.get(Path);
+        System.out.println(filepath.getFileName().toString());
+    	
+        String f = ".//fileChunks//" + filepath.getFileName().toString();
+        System.out.println(f);
+        File sourceDir = new File(f);
+        
+        deleteDir(sourceDir);
+        
+        
+        return "COMPLETE";
     }
-
+    
     public String manageStorage(int Maxdiskspace) {
         return Integer.toString(Maxdiskspace);
     }
@@ -179,6 +172,36 @@ public class Server implements Backup {
         return "Hello, world!";
     }
 
+    void write(byte[] DataByteArray, String DestinationFileName) {
+        try {
+            OutputStream output = null;
+            try {
+                output = new BufferedOutputStream(new FileOutputStream(DestinationFileName));
+                output.write(DataByteArray);
+                System.out.println("Writing Process Was Performed");
+            } finally {
+                output.close();
+            }
+        } catch (FileNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+    
+    public boolean deleteDir(File dir) {
+        if (dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i=0; i<children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
+    
     public static void main(String args[]) {
 
         try {
