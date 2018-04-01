@@ -19,13 +19,20 @@ import java.rmi.registry.Registry;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.net.*;
+
 
 public class Server implements Backup {
+
+    public static String serverID, version, peer_ap;
+    public static InetAddress mcA, mdbA, mdrA;
+	public static int mcP, mdbP, mdrP;
+	public static MulticastSocket mcS, mdbS, mdrS;
 
     public Server() {
     }
 
-    public String backupFile(String Path, int Degree) throws IOException {
+    public String backupFile(String Path, int Degree) throws RemoteException, IOException {
 
         Path filepath = Paths.get(Path);
         byte[] fileArray;
@@ -83,11 +90,11 @@ public class Server implements Backup {
             ex.printStackTrace();
         }
 
-        return "COMPLETE";
-
+        Message stored = new Message(Message.MsgType.STORED, "1.0", "1", "1", "10");   
+        return stored.toString();
     }
 
-    public String restoreFile(String Path) {
+    public String restoreFile(String Path) throws RemoteException {
 
         Path filepath = Paths.get(Path);
         System.out.println(filepath.getFileName().toString());
@@ -149,7 +156,7 @@ public class Server implements Backup {
         return "COMPLETE!";
     }
 
-    public String deleteFile(String Path) {
+    public String deleteFile(String Path) throws RemoteException {
     	
     	Path filepath = Paths.get(Path);
         System.out.println(filepath.getFileName().toString());
@@ -164,12 +171,12 @@ public class Server implements Backup {
         return "COMPLETE";
     }
     
-    public String manageStorage(int Maxdiskspace) {
+    public String manageStorage(int Maxdiskspace) throws RemoteException {
         return Integer.toString(Maxdiskspace);
     }
 
-    public String retrieveInfo() {
-        return "Hello, world!";
+    public String retrieveInfo() throws RemoteException {
+        return "State: Good";
     }
 
     void write(byte[] DataByteArray, String DestinationFileName) {
@@ -203,19 +210,53 @@ public class Server implements Backup {
     }
     
     public static void main(String args[]) {
+    
+        if (args.length != 9) {
+			System.out.println("Usage: Server <protocolVersion> <serverID> <peerAP> <MulticastChannelAddress> <MulticastChannelPort> <MulticastBackupAddress> <MulticastBackupPort> <MulticastRestoreAddress> <MulticastRestorePort>");
+			System.exit(1);
+        }
+			
+        serverID = args[0];
+		version = args[1];
+		peer_ap = args[2];
+
+		
 
         try {
+        
+            mcA = InetAddress.getByName(args[3]);
+            mcP = Integer.parseInt(args[4]);
+
+            mdbA = InetAddress.getByName(args[5]);
+            mdbP = Integer.parseInt(args[6]);
+
+            mdrA = InetAddress.getByName(args[7]);
+            mdrP = Integer.parseInt(args[8]);
+        
             Server obj = new Server();
             Backup stub = (Backup) UnicastRemoteObject.exportObject(obj, 0);
-
+            
             // Bind the remote object's stub in the registry
             Registry registry = LocateRegistry.getRegistry();
-            registry.bind("Backup", stub);
+            registry.bind(peer_ap, stub);
 
+            mcS = new MulticastSocket(mcP);
+            mdbS = new MulticastSocket(mdbP);
+            mdrS = new MulticastSocket(mdrP);
+            
+            mcS.setTimeToLive(1);
+            mdbS.setTimeToLive(1);
+            mdrS.setTimeToLive(1);
+
+            mcS.joinGroup(mcA);
+            mdbS.joinGroup(mdbA);
+            mdrS.joinGroup(mdrA);
+            
             System.err.println("Server ready");
         } catch (Exception e) {
             System.err.println("Server exception: " + e.toString());
             e.printStackTrace();
         }
+
     }
 }

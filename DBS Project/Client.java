@@ -8,11 +8,19 @@ public class Client {
     private Client() {}
 
     public static void main(String[] args) {
-
-        String host = (args.length < 1) ? null : args[0];
+    
+        String peer_ap = "";
+        
+        if(args.length != 0){
+            peer_ap = args[0];
+        } else {
+            System.out.println("Usage: java Client <peer_ap> <sub_protocol> <opnd_1> <opnd_2>");
+        }
+        
         try {
+            String host = "LOCALHOST";
             Registry registry = LocateRegistry.getRegistry(host);
-            Backup stub = (Backup) registry.lookup("Backup");
+            Backup stub = (Backup) registry.lookup(peer_ap);
             String response = null;
             
             switch (args[1]) {
@@ -48,7 +56,7 @@ public class Client {
             	}
             	break;
             
-            case "MANAGE":
+            case "RECLAIM":
             	
             	if(args.length == 3) {
             		
@@ -58,7 +66,7 @@ public class Client {
             	}
             	break;
             	
-            case "INFO":
+            case "STATE":
             	
             	if(args.length == 2) {
             		
