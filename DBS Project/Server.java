@@ -35,11 +35,6 @@ public class Server implements Backup {
         int FILE_SIZE = (int) file.length();
         int CHUNK_SIZE = 64000;
 
-        String destFiles = ".//fileChunks//" + filepath.getFileName().toString();
-        System.out.println(destFiles);
-        File destFile = new File(destFiles);
-        destFile.mkdirs();
-
         System.out.println("Filename:" + filepath.getFileName().toString());
         System.out.println("Path:" + filepath.toString());
 
@@ -52,7 +47,11 @@ public class Server implements Backup {
 
             try {
                 inStream = new BufferedInputStream(new FileInputStream(file));
-
+                String destFiles = ".//fileChunks//" + filepath.getFileName().toString();
+                System.out.println(destFiles);
+                File destFile = new File(destFiles);
+                destFile.mkdirs();
+                
                 while (totalBytesRead < FILE_SIZE) {
                     String PART_NAME = "chunk_" + NUMBER_OF_CHUNKS + ".bin";
                     int bytesRemaining = FILE_SIZE - totalBytesRead;
@@ -109,49 +108,64 @@ public class Server implements Backup {
 
         Path filepath = Paths.get(Path);
         System.out.println(filepath.getFileName().toString());
-
-        File file = new File(filepath.toString());
-
-        return Path;
-    }
-
-    /*public void mergeParts(String name, String DESTINATION_PATH) {
-        File[] file = new File[nameList.size()];
         byte AllFilesContent[] = null;
-
+        
+        String f = ".//fileChunks//" + filepath.getFileName().toString();
+        System.out.println(f);
+        File sourceDir = new File(f);
+        
+        
         int TOTAL_SIZE = 0;
-        int FILE_NUMBER = nameList.size();
+        int FILE_NUMBER = sourceDir.list().length;
         int FILE_LENGTH = 0;
-        int CURRENT_LENGTH = 0;
+        int CURRENT_LENGTH=0;
+        String DESTINATION_DIR = ".//restoredFiles";
+        
+        System.out.println(DESTINATION_DIR);
+        
+        File[] files = new File[FILE_NUMBER];
 
-        for (int i = 0; i < FILE_NUMBER; i++) {
-            file[i] = new File(nameList.get(i));
-            TOTAL_SIZE += file[i].length();
+        for(int i = 0; i < FILE_NUMBER; i++) {
+        	
+        	String source = f + "//chunk_" + i + ".bin";
+        	//System.out.println(source);
+        	files[i] = new File(source); 
+        	TOTAL_SIZE+= files[i].length();
+        	
         }
-
+        
+        
         try {
-            AllFilesContent = new byte[TOTAL_SIZE]; // Length of All Files, Total Size
-            InputStream inStream = null;
+        	AllFilesContent= new byte[TOTAL_SIZE]; // Length of All Files, Total Size
+        	InputStream inStream = null;
 
-            for (int j = 0; j < FILE_NUMBER; j++) {
-                inStream = new BufferedInputStream(new FileInputStream(file[j]));
-                FILE_LENGTH = (int) file[j].length();
-                inStream.read(AllFilesContent, CURRENT_LENGTH, FILE_LENGTH);
-                CURRENT_LENGTH += FILE_LENGTH;
-                inStream.close();
-            }
+        	for ( int j=0; j<FILE_NUMBER; j++)
+        	{
+        		inStream = new BufferedInputStream ( new FileInputStream( files[j] ));
+        		FILE_LENGTH = (int) files[j].length();
+        		inStream.read(AllFilesContent, CURRENT_LENGTH, FILE_LENGTH);
+        		CURRENT_LENGTH+=FILE_LENGTH;
+        		inStream.close();
+        	}
 
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found " + e);
-        } catch (IOException ioe) {
-            System.out.println("Exception while reading the file " + ioe);
-        } finally {
-            write(AllFilesContent, DESTINATION_PATH);
+        }
+        catch (FileNotFoundException e)
+        {
+        	System.out.println("File not found " + e);
+        }
+        catch (IOException ioe)
+        {
+        	System.out.println("Exception while reading the file " + ioe);
+        }
+        finally 
+        {
+        	write (AllFilesContent,DESTINATION_DIR);
         }
 
         System.out.println("Merge was executed successfully.!");
-
-    }*/
+        
+        return "COMPLETE!";
+    }
 
     public String deleteFile(String Path) {
         return Path;
