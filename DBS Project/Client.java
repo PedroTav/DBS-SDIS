@@ -21,7 +21,7 @@ public class Client {
 		try {
             String host = peer_ap;
             System.setProperty("java.rmi.server.hostname",host);
-			Registry registry = LocateRegistry.getRegistry();
+			//Registry registry = LocateRegistry.getRegistry();
 			System.out.println("1");
 			
 			Backup stub = (Backup) registry.lookup("Backup");
