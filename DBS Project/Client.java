@@ -19,11 +19,16 @@ public class Client {
 		}
 
 		try {
-			String host = "LOCALHOST";
+			String host = "localhost";
 			Registry registry = LocateRegistry.getRegistry(host);
-			Backup stub = (Backup) registry.lookup(peer_ap);
+			System.out.println("1");
+			
+			Backup stub = (Backup) registry.lookup("Backup");
+			System.out.println("2");
 			String response = null;
 
+			System.out.println("3");
+			
 			switch (args[1]) {
 			
 			case "BACKUP":

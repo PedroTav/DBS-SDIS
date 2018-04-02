@@ -220,8 +220,6 @@ public class Server implements Backup {
 		version = args[1];
 		peer_ap = args[2];
 
-		
-
         try {
         
             mcA = InetAddress.getByName(args[3]);
@@ -237,8 +235,8 @@ public class Server implements Backup {
             Backup stub = (Backup) UnicastRemoteObject.exportObject(obj, 0);
             
             // Bind the remote object's stub in the registry
-            Registry registry = LocateRegistry.getRegistry();
-            registry.bind(peer_ap, stub);
+            Registry registry = LocateRegistry.getRegistry(peer_ap, 1099);
+            registry.bind("Backup", stub);
 
             mcS = new MulticastSocket(mcP);
             mdbS = new MulticastSocket(mdbP);
