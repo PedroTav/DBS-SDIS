@@ -19,8 +19,8 @@ public class Client {
 		}
 
 		try {
-			String host = "localhost";
-			Registry registry = LocateRegistry.getRegistry(host);
+			//String host = "localhost";
+			Registry registry = LocateRegistry.getRegistry();
 			System.out.println("1");
 			
 			Backup stub = (Backup) registry.lookup("Backup");
