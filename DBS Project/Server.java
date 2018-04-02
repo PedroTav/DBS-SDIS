@@ -234,8 +234,16 @@ public class Server implements Backup {
             Server obj = new Server();
             Backup stub = (Backup) UnicastRemoteObject.exportObject(obj, 0);
             
-            // Bind the remote object's stub in the registry
-            Registry registry = LocateRegistry.getRegistry(peer_ap);
+            Registry registry = null;
+            
+            try {
+				registry = LocateRegistry.getRegistry();
+				registry.list();
+			}
+			catch (RemoteException e) { 
+				registry = LocateRegistry.createRegistry(1099);
+			}
+ 
             registry.rebind("Backup", stub);
 
             mcS = new MulticastSocket(mcP);

@@ -2,6 +2,7 @@ package main.backup;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
+import java.net.*;
 
 public class Client {
 
@@ -19,17 +20,11 @@ public class Client {
 		}
 
 		try {
-            String host = peer_ap;
-            System.setProperty("java.rmi.server.hostname",host);
-			//Registry registry = LocateRegistry.getRegistry();
-			System.out.println("1");
-			
+            //String localhost = InetAddress.getLocalHost().getHostAddress();
+			Registry registry = LocateRegistry.getRegistry(peer_ap);
 			Backup stub = (Backup) registry.lookup("Backup");
-			System.out.println("2");
+	
 			String response = null;
-
-			System.out.println("3");
-			
 			switch (args[1]) {
 			
 			case "BACKUP":

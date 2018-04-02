@@ -1,5 +1,7 @@
 #!/bin/bash
 
-java -classpath . main.backup.Client 192.1.1.2 BACKUP "test.jpg" 3
+echo "Running client."
+
+java -classpath . main.backup.Client localhost BACKUP "test.jpg" 3
 
 
