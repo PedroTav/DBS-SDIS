@@ -19,7 +19,8 @@ public class Client {
 		}
 
 		try {
-			//String host = "localhost";
+            String host = peer_ap;
+            System.setProperty("java.rmi.server.hostname",host);
 			Registry registry = LocateRegistry.getRegistry();
 			System.out.println("1");
 			
