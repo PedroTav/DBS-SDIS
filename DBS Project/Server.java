@@ -215,9 +215,9 @@ public class Server implements Backup {
 			System.out.println("Usage: Server <protocolVersion> <serverID> <peerAP> <MulticastChannelAddress> <MulticastChannelPort> <MulticastBackupAddress> <MulticastBackupPort> <MulticastRestoreAddress> <MulticastRestorePort>");
 			System.exit(1);
         }
-			
-        serverID = args[0];
-		version = args[1];
+        
+        version = args[0];
+        serverID = args[1];
 		peer_ap = args[2];
 
         try {
