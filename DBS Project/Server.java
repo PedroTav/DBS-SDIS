@@ -222,14 +222,14 @@ public class Server implements Backup {
 
         try {
         
-            /*mcA = InetAddress.getByName(args[3]);
+            mcA = InetAddress.getByName(args[3]);
             mcP = Integer.parseInt(args[4]);
 
             mdbA = InetAddress.getByName(args[5]);
             mdbP = Integer.parseInt(args[6]);
 
             mdrA = InetAddress.getByName(args[7]);
-            mdrP = Integer.parseInt(args[8]);*/
+            mdrP = Integer.parseInt(args[8]);
         
             Server obj = new Server();
             Backup stub = (Backup) UnicastRemoteObject.exportObject(obj, 0);
@@ -246,13 +246,13 @@ public class Server implements Backup {
  
             registry.rebind(peer_ap, stub);
 
-            /*mcS = new MulticastSocket(mcP);
+            mcS = new MulticastSocket(mcP);
             mdbS = new MulticastSocket(mdbP);
             mdrS = new MulticastSocket(mdrP);
 
             mcS.joinGroup(mcA);
             mdbS.joinGroup(mdbA);
-            mdrS.joinGroup(mdrA);*/
+            mdrS.joinGroup(mdrA);
             
             System.err.println("Server ready");
         } catch (Exception e) {

@@ -20,8 +20,8 @@ public class Client {
 		}
 
 		try {
-            String localhost = "localhost";
-			Registry registry = LocateRegistry.getRegistry();
+            String rmiHost = "192.168.1.2";
+			Registry registry = LocateRegistry.getRegistry(rmiHost);
 			Backup stub = (Backup) registry.lookup(peer_ap);
 	
 			String response = null;

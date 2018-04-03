@@ -1,7 +1,4 @@
 #!/bin/bash
-
-echo "Running client."
-
-java -classpath . main.backup.Client PEER1 BACKUP "test.jpg" 3
-
-
+echo "Client Backup."
+java -classpath bin main.backup.Client PEER1 BACKUP "test.jpg" 3
+echo "Backup completed."
