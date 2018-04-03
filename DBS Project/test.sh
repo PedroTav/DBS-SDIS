@@ -2,6 +2,6 @@
 
 echo "Running client."
 
-java -classpath . main.backup.Client localhost BACKUP "test.jpg" 3
+java -classpath . main.backup.Client PEER1 BACKUP "test.jpg" 3
 
 

@@ -21,7 +21,7 @@ public class Client {
 
 		try {
             String localhost = "localhost";
-			Registry registry = LocateRegistry.getRegistry(localhost);
+			Registry registry = LocateRegistry.getRegistry();
 			Backup stub = (Backup) registry.lookup(peer_ap);
 	
 			String response = null;
