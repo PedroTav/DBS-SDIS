@@ -20,9 +20,9 @@ public class Client {
 		}
 
 		try {
-            //String localhost = InetAddress.getLocalHost().getHostAddress();
-			Registry registry = LocateRegistry.getRegistry(peer_ap);
-			Backup stub = (Backup) registry.lookup("Backup");
+            String localhost = "localhost";
+			Registry registry = LocateRegistry.getRegistry(localhost);
+			Backup stub = (Backup) registry.lookup(peer_ap);
 	
 			String response = null;
 			switch (args[1]) {

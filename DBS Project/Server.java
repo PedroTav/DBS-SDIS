@@ -238,13 +238,13 @@ public class Server implements Backup {
             
             try {
 				registry = LocateRegistry.getRegistry();
-				registry.list();
+			
 			}
 			catch (RemoteException e) { 
 				registry = LocateRegistry.createRegistry(1099);
 			}
  
-            registry.rebind("Backup", stub);
+            registry.rebind(peer_ap, stub);
 
             mcS = new MulticastSocket(mcP);
             mdbS = new MulticastSocket(mdbP);
